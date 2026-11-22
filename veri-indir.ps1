@@ -1,4 +1,4 @@
-# Üç örneğin ham verisini data/ klasörüne indirir. Modeli yeniden eğitmek için gerekir.
+﻿# Üç örneğin ham verisini data/ klasörüne indirir. Modeli yeniden eğitmek için gerekir.
 # Çalıştırma (proje klasöründe):  powershell -ExecutionPolicy Bypass -File veri-indir.ps1
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'

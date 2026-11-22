@@ -11,3 +11,6 @@ data/
 modeller/atik_calisma/
 modeller/*_log.txt
 
+
+# Flash bellek paketi (paketle.ps1 oluşturur)
+paket/

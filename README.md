@@ -20,6 +20,16 @@ dotnet run --project src/Web
 
 Sonra tarayıcıda http://localhost:5080 adresini aç.
 
+### Okul bilgisayarında / .NET kurulu olmayan bilgisayarda
+
+Kurulum gerektirmeyen paket hazırla (içinde .NET de var, hedef bilgisayarda sadece 64-bit Windows yeterli):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File paketle.ps1
+```
+
+`paket\MlOdev` klasörünü flash belleğe kopyala. Okulda klasörü masaüstüne kopyalayıp içindeki **BASLAT.bat** dosyasına çift tıkla. Tarayıcı kendiliğinden açılır.
+
 ### Modelleri yeniden eğitmek istersen
 
 Ham veriler repoda yok (boyut ve lisans nedeniyle). Önce indir, sonra eğit:

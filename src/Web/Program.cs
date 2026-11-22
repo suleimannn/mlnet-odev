@@ -7,13 +7,30 @@ using Microsoft.ML;
 using Microsoft.ML.Data;
 using Ortak;
 
-var builder = WebApplication.CreateBuilder(args);
+// Paketlenmiş (flash bellek) sürümde wwwroot ve modeller exe'nin yanında durur.
+var paketli = Directory.Exists(Path.Combine(AppContext.BaseDirectory, "wwwroot"));
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = paketli ? AppContext.BaseDirectory : null,
+});
 builder.WebHost.UseUrls("http://localhost:5080");
 var app = builder.Build();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-var modelKlasoru = Path.Combine(ProjeKokunuBul(app.Environment.ContentRootPath), "modeller");
+var modelKlasoru = paketli
+    ? Path.Combine(AppContext.BaseDirectory, "modeller")
+    : Path.Combine(ProjeKokunuBul(app.Environment.ContentRootPath), "modeller");
+
+// Paketli sürümde sunucu açılınca tarayıcıyı kendisi açsın
+if (paketli)
+    app.Lifetime.ApplicationStarted.Register(() =>
+    {
+        Console.WriteLine("\nUygulama çalışıyor: http://localhost:5080  (kapatmak için bu pencereyi kapatın)");
+        if (Environment.GetEnvironmentVariable("MLODEV_TARAYICI_ACMA") == "1") return;
+        try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://localhost:5080") { UseShellExecute = true }); } catch { }
+    });
 var ml = new MLContext();
 
 // Modeller ilk istekte yüklenir (dosya henüz yoksa sonraki istekte tekrar denenir).
