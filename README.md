@@ -54,3 +54,4 @@ dotnet run --project src/Egitim -- sms
 - `src/Web/` tahmin yapan küçük web sunucusu ve arayüz (`wwwroot/index.html`)
 - `modeller/` eğitilmiş modeller (`*.zip`) ve başarı sonuçları (`sonuclar.json`)
 - `SUNUM.md` sunumda söylenecekler ve olası sorular
+- `CALISMA.md` kapsamlı çalışma rehberi (kavramlar, her örneğin detayı, sistem analizi, sorular)
