@@ -16,11 +16,6 @@
     <None Include="..\..\modeller\*.zip;..\..\modeller\*.json" LinkBase="modeller" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <!-- Flash bellek paketi: çift tıklayıp açmak için -->
-  <ItemGroup>
-    <None Include="BASLAT.bat" CopyToPublishDirectory="PreserveNewest" />
-  </ItemGroup>
-
   <!-- TensorFlow'un ihtiyaç duyduğu Visual C++ çalışma zamanı, okul bilgisayarında kurulu olmayabilir diye pakete eklenir -->
   <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
     <None Include="$(SystemRoot)\System32\msvcp140.dll;$(SystemRoot)\System32\vcruntime140.dll;$(SystemRoot)\System32\vcruntime140_1.dll" CopyToPublishDirectory="PreserveNewest" Visible="false" />

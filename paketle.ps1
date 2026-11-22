@@ -4,13 +4,16 @@
 $ErrorActionPreference = 'Stop'
 $kok = $PSScriptRoot
 $cikti = Join-Path $kok 'paket\MlOdev'
+$uygulama = Join-Path $cikti 'uygulama'   # yüzlerce .NET/TensorFlow dosyası buraya, dışarıda sadece BASLAT.bat kalır
 
 if (Test-Path (Join-Path $kok 'paket')) { Remove-Item (Join-Path $kok 'paket') -Recurse -Force }
-dotnet publish (Join-Path $kok 'src\Web') -c Release -r win-x64 --self-contained true -p:DebugType=none -o $cikti
+dotnet publish (Join-Path $kok 'src\Web') -c Release -r win-x64 --self-contained true -p:DebugType=none -o $uygulama
 if ($LASTEXITCODE -ne 0) { throw 'Paketleme başarısız.' }
 
 # Hata ayıklama dosyaları gereksiz yer kaplar
-Get-ChildItem $cikti -Filter *.pdb | Remove-Item -Force
+Get-ChildItem $uygulama -Filter *.pdb | Remove-Item -Force
+
+Copy-Item (Join-Path $kok 'BASLAT.bat') $cikti
 
 Write-Host 'Zip yapılıyor...'
 Compress-Archive -Path $cikti -DestinationPath (Join-Path $kok 'paket\MlOdev.zip') -CompressionLevel Optimal

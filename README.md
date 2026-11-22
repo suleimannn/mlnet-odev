@@ -30,7 +30,7 @@ Kurulum gerektirmeyen paket hazırla (içinde .NET de var, hedef bilgisayarda sa
 powershell -ExecutionPolicy Bypass -File paketle.ps1
 ```
 
-`paket\MlOdev` klasörünü flash belleğe kopyala. Okulda klasörü masaüstüne kopyalayıp içindeki **BASLAT.bat** dosyasına çift tıkla. Tarayıcı kendiliğinden açılır.
+`paket\MlOdev` klasörünü flash belleğe kopyala. İçinde sadece **BASLAT.bat** ve `uygulama` klasörü var. Okulda klasörü masaüstüne kopyalayıp **BASLAT.bat** dosyasına çift tıkla, tarayıcı kendiliğinden açılır. `uygulama` klasörüne dokunmana gerek yok.
 
 ### Modelleri yeniden eğitmek istersen
 
