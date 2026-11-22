@@ -1,7 +1,0 @@
-<Solution>
-  <Folder Name="/src/">
-    <Project Path="src/Egitim/Egitim.csproj" />
-    <Project Path="src/Ortak/Ortak.csproj" />
-    <Project Path="src/Web/Web.csproj" />
-  </Folder>
-</Solution>

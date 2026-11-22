@@ -63,8 +63,8 @@ Sınıftan birine "senin araban ne?" diye sorup onunkini dene.
 > milyonlarca fotoğrafla önceden eğitilmiş hazır bir model aldık (**ResNet**). Bu model kenarları, şekilleri ve dokuları
 > zaten tanıyor. Biz sadece son katmanını kendi 6 sınıfımıza göre yeniden eğittik. Bu sayede 2.500 fotoğraf yetti.
 >
-> **Sonuç:** daha önce hiç görmediği 505 test fotoğrafının %88,8'ini doğru bildi. En zorlandığı sınıf 'diğer çöp' oldu,
-> çünkü bu sınıfta en az fotoğraf var (137) ve içinde her türden şey bulunuyor. En kolay tanıdığı ise karton (%97)."
+> **Sonuç:** daha önce hiç görmediği 505 test fotoğrafının %87,3'ini doğru bildi. En zorlandığı sınıf 'diğer çöp' oldu,
+> çünkü bu sınıfta en az fotoğraf var (137) ve içinde her türden şey bulunuyor. En kolay tanıdığı ise karton (%96)."
 
 **Demo:** Telefonla bir pet şişe ya da kağıt fotoğrafı çek, bilgisayara at ve sürükle bırak. Olasılık çubuklarını göster.
 İpucu: Atık tek başına ve sade bir zeminde olsun. Model bu tür fotoğraflarla eğitildi.
@@ -95,7 +95,7 @@ Bu sonuç modelin hiç görmediği test mesajlarından geliyor. Spam mesajlar ge
 **Transfer learning nedir?**
 Başka bir iş için eğitilmiş bir modelin bilgisini yeni bir işte kullanmak. Biz ResNet'in görüntü tanıma bilgisini atık tanımaya uyarladık.
 
-**Atık modeli neden diğerlerinden daha düşük (%88,8)?**
+**Atık modeli neden diğerlerinden daha düşük (%87,3)?**
 Fotoğraf tanımak metin ya da tablo verisinden daha zor. Ayrıca elimizde sadece 2.500 fotoğraf vardı. Daha fazla fotoğrafla oran yükselir.
 
 **Atık olmayan bir şeyin fotoğrafını (mesela bir insanı) yüklesek ne olur?**

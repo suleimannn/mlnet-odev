@@ -84,7 +84,7 @@ app.MapPost("/api/atik/tahmin", async (IFormFile resim) =>
 
         return Results.Ok(new { sinif = AtikSiniflari.Turkce.GetValueOrDefault(t.Sinif, t.Sinif), olasiliklar });
     }
-}).DisableAntiforgery();
+});
 
 app.Run();
 
@@ -109,13 +109,15 @@ static IResult ModelYok(string ad) =>
 static string ProjeKokunuBul(string baslangic)
 {
     var d = new DirectoryInfo(baslangic);
-    while (d != null && !File.Exists(Path.Combine(d.FullName, "MlOdev.slnx"))) d = d.Parent;
-    return d?.FullName ?? throw new Exception("Proje kökü (MlOdev.slnx) bulunamadı.");
+    while (d != null && !File.Exists(Path.Combine(d.FullName, "MlOdev.sln"))) d = d.Parent;
+    return d?.FullName ?? throw new Exception("Proje kökü (MlOdev.sln) bulunamadı.");
 }
 
 /// <summary>Modeli bir kez yükler; dosya yoksa null döner ve sonraki çağrıda tekrar dener.</summary>
-class ModelTutucu<T>(Func<T?> yukleyici) where T : class
+class ModelTutucu<T> where T : class
 {
+    private readonly Func<T?> yukleyici;
+    public ModelTutucu(Func<T?> yukleyici) => this.yukleyici = yukleyici;
     private T? _deger;
     private readonly object _kilit = new();
     public T? Value { get { lock (_kilit) return _deger ??= yukleyici(); } }

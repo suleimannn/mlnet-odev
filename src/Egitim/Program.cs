@@ -66,7 +66,7 @@ object ArabaEgit()
     // 3. Pipeline: yazıları sayıya çevir (one-hot) -> hepsini birleştir -> FastTree ile öğren
     var kategorikler = new[] { "Marka", "Seri", "Yakit", "Vites", "MotorHacmi", "KasaTipi", "Kimden" };
     var pipeline = ml.Transforms.Categorical.OneHotEncoding(kategorikler.Select(c => new InputOutputColumnPair(c)).ToArray())
-        .Append(ml.Transforms.Concatenate("Features", [.. kategorikler, "ModelYili", "Km"]))
+        .Append(ml.Transforms.Concatenate("Features", kategorikler.Append("ModelYili").Append("Km").ToArray()))
         .Append(ml.Regression.Trainers.FastTree(numberOfLeaves: 31, numberOfTrees: 300, learningRate: 0.1));
 
     var model = pipeline.Fit(bolum.TrainSet);
@@ -197,8 +197,8 @@ static void Baslik(string s) => Console.WriteLine($"\n==================== {s} =
 static string ProjeKokunuBul()
 {
     var d = new DirectoryInfo(AppContext.BaseDirectory);
-    while (d != null && !File.Exists(Path.Combine(d.FullName, "MlOdev.slnx"))) d = d.Parent;
-    return d?.FullName ?? throw new Exception("Proje kökü (MlOdev.slnx) bulunamadı.");
+    while (d != null && !File.Exists(Path.Combine(d.FullName, "MlOdev.sln"))) d = d.Parent;
+    return d?.FullName ?? throw new Exception("Proje kökü (MlOdev.sln) bulunamadı.");
 }
 
 /// <summary>Tırnak içinde virgül ve satır sonu olabilen CSV dosyasını okur.</summary>
@@ -223,7 +223,7 @@ static List<List<string>> CsvOku(string yol, char ayrac)
         else if (c == '\n')
         {
             satir.Add(alan.ToString().TrimEnd('\r')); alan.Clear();
-            sonuc.Add(satir); satir = [];
+            sonuc.Add(satir); satir = new List<string>();
         }
         else alan.Append(c);
     }

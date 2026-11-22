@@ -10,13 +10,15 @@ Sistem Analizi dersi, ML.NET grubu. ML.NET'in üç farklı görevini gösteren �
 
 ## Çalıştırma
 
-Gerekli: .NET 10 SDK ve [Git LFS](https://git-lfs.com) (atık modeli 95 MB olduğu için LFS ile saklanıyor).
+Proje **.NET 7** ve **ML.NET 3.0.1** ile yazıldı. Gerekenler: .NET 7 SDK (ya da daha yenisi + .NET 7 runtime) ve [Git LFS](https://git-lfs.com). Atık modeli 95 MB olduğu için LFS ile saklanıyor.
 
 Eğitilmiş modeller repoda hazır, yani **direkt arayüzü açabilirsin**:
 
 ```powershell
 dotnet run --project src/Web
 ```
+
+**Visual Studio 2022 ile:** `MlOdev.sln` dosyasını aç. **Web** projesine sağ tıklayıp **Set as Startup Project** de, sonra ▶ butonuna bas.
 
 Sonra tarayıcıda http://localhost:5080 adresini aç.
 

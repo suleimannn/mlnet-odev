@@ -57,7 +57,7 @@ public class SmsTahmini
 
 public class AtikFotografi
 {
-    public byte[] Resim { get; set; } = [];
+    public byte[] Resim { get; set; } = Array.Empty<byte>();
     public string Sinif { get; set; } = "";   // eğitimde kullanılır
 }
 
@@ -67,7 +67,7 @@ public class AtikTahmini
     public string Sinif { get; set; } = "";
 
     /// <summary>Her sınıf için olasılıklar.</summary>
-    public float[] Score { get; set; } = [];
+    public float[] Score { get; set; } = Array.Empty<float>();
 }
 
 public static class AtikSiniflari
