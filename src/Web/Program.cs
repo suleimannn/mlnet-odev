@@ -59,9 +59,13 @@ app.MapPost("/api/sms/tahmin", (SmsMesaji mesaj) =>
     }
 });
 
-app.MapPost("/api/atik/tahmin", async (IFormFile resim) =>
+// Formu elle okuyoruz: böylece hem .NET 7'de hem daha yeni sürümlerde (form güvenlik kuralına takılmadan) çalışır.
+app.MapPost("/api/atik/tahmin", async (HttpRequest istek) =>
 {
     if (atik.Value is not { } motor) return ModelYok("atik");
+    if (!istek.HasFormContentType) return Results.BadRequest(new { hata = "Fotoğraf gönderilmedi." });
+    var resim = (await istek.ReadFormAsync()).Files["resim"];
+    if (resim is null) return Results.BadRequest(new { hata = "Fotoğraf gönderilmedi." });
     using var ms = new MemoryStream();
     await resim.CopyToAsync(ms);
     // Model sadece JPEG okuyabiliyor (arayüz her resmi zaten JPEG'e çevirip gönderiyor).

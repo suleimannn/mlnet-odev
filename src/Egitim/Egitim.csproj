@@ -17,6 +17,8 @@
     <LangVersion>11</LangVersion>
     <!-- .NET 7 desteği bitti uyarısını gizle (okul bilgisayarları .NET 7 kullanıyor) -->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <!-- .NET 7 yoksa bilgisayardaki daha yeni .NET ile çalışsın -->
+    <RollForward>Major</RollForward>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
