@@ -1,0 +1,13 @@
+# Derleme çıktıları
+bin/
+obj/
+.vs/
+*.user
+
+# Ham veriler GitHub'a konmaz, veri-indir.ps1 ile indirilir
+data/
+
+# Atık eğitiminin geçici dosyaları (yüzlerce MB)
+modeller/atik_calisma/
+modeller/*_log.txt
+

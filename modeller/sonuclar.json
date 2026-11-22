@@ -1,0 +1,17 @@
+{
+  "araba": {
+    "ilanSayisi": 8686,
+    "r2": 0.921,
+    "ortalamaHataTL": 15395
+  },
+  "sms": {
+    "mesajSayisi": 4751,
+    "dogruluk": 0.993,
+    "kesinlik": 0.992,
+    "duyarlilik": 0.994
+  },
+  "atik": {
+    "fotografSayisi": 2527,
+    "dogruluk": 0.888
+  }
+}

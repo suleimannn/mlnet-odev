@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ML.NET ile 3 Örnek</title>
+<style>
+  :root {
+    --zemin: #f6f5f1; --kart: #ffffff; --yazi: #1d1d1b; --soluk: #6b6a65; --cizgi: #e3e1da;
+    --vurgu: #2f5d50; --vurgu-acik: #e4eeea; --kirmizi: #b3402f; --kirmizi-acik: #f7e4e0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; background: var(--zemin); color: var(--yazi); }
+  .sayfa { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+  header h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: -0.5px; }
+  header p { margin: 0; color: var(--soluk); }
+  nav { display: flex; gap: 8px; margin: 32px 0 20px; border-bottom: 1px solid var(--cizgi); }
+  nav button {
+    background: none; border: none; padding: 12px 16px; font: inherit; font-size: 15px; color: var(--soluk);
+    cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  nav button.aktif { color: var(--yazi); border-bottom-color: var(--vurgu); font-weight: 600; }
+  .bolum { display: none; }
+  .bolum.aktif { display: block; }
+  .kart { background: var(--kart); border: 1px solid var(--cizgi); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+  .aciklama { color: var(--soluk); margin: 0 0 20px; line-height: 1.5; }
+  .metrikler { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .metrik { background: var(--kart); border: 1px solid var(--cizgi); border-radius: 10px; padding: 12px 16px; min-width: 150px; }
+  .metrik b { display: block; font-size: 22px; }
+  .metrik span { font-size: 13px; color: var(--soluk); }
+  .izgara { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  label { display: block; font-size: 13px; color: var(--soluk); margin-bottom: 5px; }
+  select, input, textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--cizgi); border-radius: 8px; font: inherit; background: #fff;
+  }
+  textarea { min-height: 90px; resize: vertical; }
+  .dugme {
+    margin-top: 18px; background: var(--vurgu); color: #fff; border: none; border-radius: 8px; padding: 11px 22px;
+    font: inherit; font-weight: 600; cursor: pointer;
+  }
+  .dugme:disabled { opacity: .5; cursor: default; }
+  .ornekler { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .ornekler button {
+    background: var(--zemin); border: 1px solid var(--cizgi); border-radius: 999px; padding: 6px 12px; font: inherit;
+    font-size: 13px; cursor: pointer; color: var(--yazi);
+  }
+  .sonuc { margin-top: 20px; padding: 18px 20px; border-radius: 10px; display: none; }
+  .sonuc.goster { display: block; }
+  .sonuc.iyi { background: var(--vurgu-acik); }
+  .sonuc.kotu { background: var(--kirmizi-acik); }
+  .sonuc .buyuk { font-size: 28px; font-weight: 700; }
+  .hata { color: var(--kirmizi); }
+  .yukle {
+    border: 2px dashed var(--cizgi); border-radius: 12px; padding: 32px; text-align: center; cursor: pointer; color: var(--soluk);
+  }
+  .yukle.uzerinde { border-color: var(--vurgu); background: var(--vurgu-acik); }
+  .onizleme { display: flex; gap: 24px; align-items: flex-start; margin-top: 20px; flex-wrap: wrap; }
+  .onizleme img { width: 220px; border-radius: 10px; border: 1px solid var(--cizgi); }
+  .cubuk { margin-bottom: 8px; font-size: 14px; }
+  .cubuk .ic { height: 8px; background: var(--cizgi); border-radius: 4px; overflow: hidden; margin-top: 3px; }
+  .cubuk .ic div { height: 100%; background: var(--vurgu); }
+  .not { font-size: 13px; color: var(--soluk); margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="sayfa">
+  <header>
+    <h1>ML.NET ile 3 farklı makine öğrenmesi örneği</h1>
+    <p>Sayı tahmini, metin sınıflandırma ve görüntü sınıflandırma. Hepsi C# ve ML.NET ile.</p>
+  </header>
+
+  <nav>
+    <button class="aktif" data-bolum="araba">1. Araba fiyatı</button>
+    <button data-bolum="sms">2. Spam SMS</button>
+    <button data-bolum="atik">3. Atık türü</button>
+  </nav>
+
+  <!-- ===================== ARABA ===================== -->
+  <section id="araba" class="bolum aktif">
+    <p class="aciklama"><b>Regresyon:</b> arabanın özelliklerine bakıp fiyatını tahmin eder.
+      Model 2020 yılındaki yaklaşık 8.700 ikinci el ilandan öğrendi, bu yüzden fiyatlar 2020 piyasasına göredir.</p>
+    <div class="metrikler" id="araba-metrik"></div>
+    <div class="kart">
+      <div class="izgara">
+        <div><label>Marka</label><select id="Marka"></select></div>
+        <div><label>Seri</label><select id="Seri"></select></div>
+        <div><label>Model yılı</label><input id="ModelYili" type="number" value="2015" min="1990" max="2020"></div>
+        <div><label>Kilometre</label><input id="Km" type="number" value="120000" min="0" step="1000"></div>
+        <div><label>Yakıt</label><select id="Yakit"></select></div>
+        <div><label>Vites</label><select id="Vites"></select></div>
+        <div><label>Motor hacmi</label><select id="MotorHacmi"></select></div>
+        <div><label>Kasa tipi</label><select id="KasaTipi"></select></div>
+        <div><label>Kimden</label><select id="Kimden"></select></div>
+      </div>
+      <button class="dugme" id="araba-dugme">Fiyatı tahmin et</button>
+      <div class="sonuc iyi" id="araba-sonuc"></div>
+    </div>
+  </section>
+
+  <!-- ===================== SMS ===================== -->
+  <section id="sms" class="bolum">
+    <p class="aciklama"><b>İkili sınıflandırma:</b> bir SMS'in spam mı yoksa normal mesaj mı olduğunu söyler.
+      Model yaklaşık 4.750 gerçek Türkçe SMS'ten öğrendi.</p>
+    <div class="metrikler" id="sms-metrik"></div>
+    <div class="kart">
+      <label>Mesajı yaz</label>
+      <textarea id="mesaj" placeholder="Örneğin: Tebrikler! 5000 TL bonus kazandınız, hemen tıklayın..."></textarea>
+      <div class="ornekler">
+        <button>Tebrikler! 5000 TL deneme bonusu kazandınız, hemen üye olun: bit.ly/xyz</button>
+        <button>Akşam yemeğe geliyor musun? Annem sordu</button>
+        <button>Size özel %0 faizli kredi fırsatı! Başvuru için KREDI yazıp 4455'e gönderin</button>
+        <button>Hocam yarınki ders saat kaçta başlıyor?</button>
+      </div>
+      <button class="dugme" id="sms-dugme">Kontrol et</button>
+      <div class="sonuc" id="sms-sonuc"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ATIK ===================== -->
+  <section id="atik" class="bolum">
+    <p class="aciklama"><b>Görüntü sınıflandırma:</b> fotoğraftaki atığın kağıt, karton, plastik, cam, metal ya da
+      diğer çöp olduğunu söyler. Hazır eğitilmiş bir görüntü modeli (ResNet), 2.500 atık fotoğrafıyla bizim 6 sınıfımıza göre yeniden eğitildi (transfer learning).</p>
+    <div class="metrikler" id="atik-metrik"></div>
+    <div class="kart">
+      <div class="yukle" id="yukle">Fotoğrafı buraya sürükle ya da tıklayıp seç
+        <input type="file" id="dosya" accept="image/*" hidden>
+      </div>
+      <p class="not">En iyi sonuç: atık tek başına, sade bir zeminde, yakından çekilmiş olsun.</p>
+      <div class="onizleme" id="onizleme"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const tl = n => new Intl.NumberFormat("tr-TR").format(n) + " TL";
+const yuzde = n => "%" + (n * 100).toLocaleString("tr-TR", { maximumFractionDigits: 1 });
+
+// Sekmeler
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("nav button, .bolum").forEach(e => e.classList.remove("aktif"));
+  b.classList.add("aktif"); $(b.dataset.bolum).classList.add("aktif");
+});
+
+async function istek(url, secenek) {
+  const r = await fetch(url, secenek);
+  const veri = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(veri.detail || veri.hata || "Bir hata oluştu.");
+  return veri;
+}
+const metrik = (deger, ad) => `<div class="metrik"><b>${deger}</b><span>${ad}</span></div>`;
+
+// Model başarı rakamları (eğitimde kaydedilen sonuclar.json)
+istek("/api/sonuclar").then(s => {
+  if (s.araba) $("araba-metrik").innerHTML = metrik(s.araba.r2.toLocaleString("tr-TR"), "R² (1'e yakın = iyi)") + metrik(tl(s.araba.ortalamaHataTL), "ortalama hata") + metrik(s.araba.ilanSayisi.toLocaleString("tr-TR"), "ilanla eğitildi");
+  if (s.sms) $("sms-metrik").innerHTML = metrik(yuzde(s.sms.dogruluk), "doğruluk") + metrik(yuzde(s.sms.duyarlilik), "spamleri yakalama") + metrik(s.sms.mesajSayisi.toLocaleString("tr-TR"), "mesajla eğitildi");
+  if (s.atik) $("atik-metrik").innerHTML = metrik(yuzde(s.atik.dogruluk), "doğruluk") + metrik(s.atik.fotografSayisi.toLocaleString("tr-TR"), "fotoğrafla eğitildi") + metrik("6", "sınıf");
+}).catch(() => {});
+
+// ---------- ARABA ----------
+let secenekler;
+const doldur = (id, liste, varsayilan) => $(id).innerHTML = liste.map(x => `<option ${x === varsayilan ? "selected" : ""}>${x}</option>`).join("");
+istek("/api/araba/secenekler").then(s => {
+  secenekler = s;
+  doldur("Marka", Object.keys(s.markalar), "Renault");
+  seriDoldur("Clio");
+  doldur("Yakit", s.yakit, "Dizel"); doldur("Vites", s.vites, "Düz Vites");
+  doldur("MotorHacmi", s.motorHacmi, "1301-1600 cc"); doldur("KasaTipi", s.kasaTipi, "Sedan");
+  doldur("Kimden", s.kimden, "Sahibinden");
+}).catch(e => $("araba-sonuc").innerHTML = `<span class="hata">${e.message}</span>`);
+function seriDoldur(varsayilan) { doldur("Seri", secenekler.markalar[$("Marka").value], varsayilan); }
+$("Marka").onchange = () => seriDoldur();
+
+$("araba-dugme").onclick = async () => {
+  const govde = {};
+  ["Marka", "Seri", "Yakit", "Vites", "MotorHacmi", "KasaTipi", "Kimden"].forEach(k => govde[k] = $(k).value);
+  govde.ModelYili = +$("ModelYili").value; govde.Km = +$("Km").value;
+  const kutu = $("araba-sonuc"); kutu.classList.add("goster");
+  try {
+    const t = await istek("/api/araba/tahmin", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(govde) });
+    kutu.innerHTML = `Tahmini fiyat (2020 piyasası)<div class="buyuk">${tl(t.fiyat)}</div>`;
+  } catch (e) { kutu.innerHTML = `<span class="hata">${e.message}</span>`; }
+};
+
+// ---------- SMS ----------
+document.querySelectorAll(".ornekler button").forEach(b => b.onclick = () => { $("mesaj").value = b.textContent; $("sms-dugme").click(); });
+$("sms-dugme").onclick = async () => {
+  const kutu = $("sms-sonuc"); kutu.className = "sonuc goster";
+  try {
+    const t = await istek("/api/sms/tahmin", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ Mesaj: $("mesaj").value }) });
+    kutu.classList.add(t.spamMi ? "kotu" : "iyi");
+    kutu.innerHTML = `<div class="buyuk">${t.spamMi ? "SPAM" : "Normal mesaj"}</div>Spam olma olasılığı: ${yuzde(t.olasilik)}`;
+  } catch (e) { kutu.innerHTML = `<span class="hata">${e.message}</span>`; }
+};
+
+// ---------- ATIK ----------
+const yukle = $("yukle");
+yukle.onclick = () => $("dosya").click();
+$("dosya").onchange = e => e.target.files[0] && gonder(e.target.files[0]);
+yukle.ondragover = e => { e.preventDefault(); yukle.classList.add("uzerinde"); };
+yukle.ondragleave = () => yukle.classList.remove("uzerinde");
+yukle.ondrop = e => { e.preventDefault(); yukle.classList.remove("uzerinde"); e.dataTransfer.files[0] && gonder(e.dataTransfer.files[0]); };
+
+// Her resmi (PNG, WebP, büyük telefon fotoğrafı) 512 piksele küçültüp JPEG'e çeviriyoruz. Model JPEG bekliyor.
+function jpegeCevir(dosya) {
+  return new Promise((coz, reddet) => {
+    const img = new Image();
+    img.onload = () => {
+      const olcek = Math.min(1, 512 / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * olcek); c.height = Math.round(img.height * olcek);
+      const ctx = c.getContext("2d");
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      c.toBlob(b => b ? coz(b) : reddet(new Error("Resim dönüştürülemedi.")), "image/jpeg", 0.92);
+    };
+    img.onerror = () => reddet(new Error("Bu dosya bir resim değil ya da tarayıcı açamıyor. JPG veya PNG deneyin."));
+    img.src = URL.createObjectURL(dosya);
+  });
+}
+
+async function gonder(dosya) {
+  const alan = $("onizleme");
+  const url = URL.createObjectURL(dosya);
+  alan.innerHTML = `<img src="${url}"><div>İnceleniyor...</div>`;
+  try {
+    const form = new FormData(); form.append("resim", await jpegeCevir(dosya), "resim.jpg");
+    const t = await istek("/api/atik/tahmin", { method: "POST", body: form });
+    alan.innerHTML = `<img src="${url}"><div style="flex:1;min-width:220px">
+      <div class="buyuk" style="font-size:28px;font-weight:700;margin-bottom:12px">${t.sinif}</div>
+      ${t.olasiliklar.map(o => `<div class="cubuk">${o.sinif} · ${yuzde(o.oran)}<div class="ic"><div style="width:${o.oran * 100}%"></div></div></div>`).join("")}
+    </div>`;
+  } catch (e) { alan.innerHTML = `<img src="${url}"><div class="hata">${e.message}</div>`; }
+}
+</script>
+</body>
+</html>
