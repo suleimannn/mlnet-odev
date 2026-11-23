@@ -10,27 +10,29 @@ Sistem Analizi dersi, ML.NET grubu. ML.NET'in üç farklı görevini gösteren �
 
 ## Çalıştırma
 
-Proje **.NET 7** ve **ML.NET 3.0.1** ile yazıldı. Gerekenler: .NET 7 SDK (ya da daha yenisi + .NET 7 runtime) ve [Git LFS](https://git-lfs.com). Atık modeli 95 MB olduğu için LFS ile saklanıyor.
+Proje **.NET 7** ve **ML.NET 3.0.1** ile yazıldı. Gereken tek şey .NET 7 SDK ya da daha yeni bir .NET SDK. Repoyu `git clone` ile ya da GitHub'daki **Code → Download ZIP** ile indirebilirsin.
 
 Eğitilmiş modeller repoda hazır, yani **direkt arayüzü açabilirsin**:
+
+**Visual Studio 2022 ile:** `MlOdev.sln` dosyasını aç. **Web** projesine sağ tıklayıp **Set as Startup Project** de, sonra ▶ butonuna bas. Tarayıcı kendiliğinden açılır.
+
+**Komut satırından:**
 
 ```powershell
 dotnet run --project src/Web
 ```
 
-**Visual Studio 2022 ile:** `MlOdev.sln` dosyasını aç. **Web** projesine sağ tıklayıp **Set as Startup Project** de, sonra ▶ butonuna bas.
-
 Sonra tarayıcıda http://localhost:5080 adresini aç.
 
-### Okul bilgisayarında / .NET kurulu olmayan bilgisayarda
+### .NET kurulu olmayan bilgisayar için paket
 
-Kurulum gerektirmeyen paket hazırla (içinde .NET de var, hedef bilgisayarda sadece 64-bit Windows yeterli):
+Kurulum gerektirmeyen bir sürüm hazırlanabilir (içinde .NET de var, hedef bilgisayarda sadece 64-bit Windows yeterli):
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File paketle.ps1
 ```
 
-`paket\MlOdev` klasörünü flash belleğe kopyala. İçinde sadece **BASLAT.bat** ve `uygulama` klasörü var. Okulda klasörü masaüstüne kopyalayıp **BASLAT.bat** dosyasına çift tıkla, tarayıcı kendiliğinden açılır. `uygulama` klasörüne dokunmana gerek yok.
+`paket\MlOdev` klasörünü istediğin bilgisayara kopyala ve **BASLAT.bat** dosyasına çift tıkla. Tarayıcı kendiliğinden açılır.
 
 ### Modelleri yeniden eğitmek istersen
 
