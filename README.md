@@ -1,6 +1,9 @@
 # ML.NET ile 3 Örnek
 
-Sistem Analizi dersi, ML.NET grubu. ML.NET'in üç farklı görevini gösteren üç küçük örnek:
+Sistem Analizi dersi, ML.NET grubu. ML.NET'in üç farklı görevini gösteren üç küçük örnek.
+
+**Hazırlayan:** Süleyman Yılmaz (20251129025)
+
 
 | # | Örnek | ML.NET görevi | Veri |
 |---|---|---|---|
